@@ -1,0 +1,3 @@
+rootProject.name='JKit'
+include ':app'
+include ':jkit'
