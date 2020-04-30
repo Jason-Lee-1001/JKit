@@ -12,7 +12,6 @@ import kotlin.system.exitProcess
  */
 class AppKit private constructor() : Application.ActivityLifecycleCallbacks {
 
-    private val logTag = AppKit::class.java.simpleName
     private var activityStack: Stack<Activity> = Stack()
     private var serviceList: LinkedList<Service> = LinkedList()
 
@@ -29,32 +28,32 @@ class AppKit private constructor() : Application.ActivityLifecycleCallbacks {
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         activityStack.add(activity)
-        LogKit.i(logTag, "stack size:${activityStack.size}, ${activity.javaClass.simpleName} created")
+        log("stack size:${activityStack.size}, ${activity.javaClass.simpleName} created")
     }
 
     override fun onActivityStarted(activity: Activity) {
-        LogKit.i(logTag, "${activity.javaClass.simpleName} started")
+        log("${activity.javaClass.simpleName} started")
     }
 
     override fun onActivityResumed(activity: Activity) {
-        LogKit.i(logTag, "${activity.javaClass.simpleName} resumed")
+        log("${activity.javaClass.simpleName} resumed")
     }
 
     override fun onActivityPaused(activity: Activity) {
-        LogKit.i(logTag, "${activity.javaClass.simpleName} paused")
+        log("${activity.javaClass.simpleName} paused")
     }
 
     override fun onActivityStopped(activity: Activity) {
-        LogKit.i(logTag, "${activity.javaClass.simpleName} stopped")
+        log("${activity.javaClass.simpleName} stopped")
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
-        LogKit.i(logTag, "${activity.javaClass.simpleName} saved state")
+        log("${activity.javaClass.simpleName} saved state")
     }
 
     override fun onActivityDestroyed(activity: Activity) {
         activityStack.remove(activity)
-        LogKit.i(logTag, "stack size:${activityStack.size}, ${activity.javaClass.simpleName} removed")
+        log("stack size:${activityStack.size}, ${activity.javaClass.simpleName} removed")
     }
 
     fun getActivityStackSize(): Int = activityStack.size

@@ -22,6 +22,8 @@ fun Context.restartApp() {
     startActivity(restartIntent)
 }
 
+fun Context.canInstall(): Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) packageManager.canRequestPackageInstalls() else false
+
 fun Intent.isAccessible(context: Context): Boolean {
     return context.packageManager?.let { it.queryIntentActivities(this, PackageManager.MATCH_DEFAULT_ONLY).size > 0 } ?: false
 }
@@ -47,6 +49,15 @@ fun Context.installApk(context: Context, apkFile: File, authority: String) {
 
         }
     }
+}
+
+fun Context.buildIntent(target: Class<*>, setExtras: (Intent.() -> Unit)? = null, other: (Intent.() -> Unit)? = null): Intent {
+    val intent = Intent()
+    setExtras?.invoke(intent)
+    other?.invoke(intent)
+    if (this !is Activity) intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    intent.setClass(this, target)
+    return intent
 }
 
 fun takePhoto() {

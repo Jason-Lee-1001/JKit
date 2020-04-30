@@ -8,14 +8,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
+import com.jstudio.jkit.ItemAnimation
 
-abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var collection: C?) :
+
+abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var collection: C?, var showItemAnimation: Boolean = false) :
     RecyclerView.Adapter<BaseRecyclerAdapter.Holder>() {
 
     private var onItemClickBlock: ((v: View, p: Int, id: Long) -> Unit)? = null
     private var onItemLongClickBlock: ((v: View, p: Int, id: Long) -> Boolean)? = null
     private var onDataSetChangedBlock: ((c: Int) -> Unit)? = null
 
+    private var onAttach = true
+    private var lastAnimatePosition = -1
     private var observer: RecyclerView.AdapterDataObserver? = null
 
     abstract fun getItem(position: Int): E
@@ -30,6 +34,10 @@ abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var col
 
     fun setDataSetChangedBlock(block: (count: Int) -> Unit) {
         this.onDataSetChangedBlock = block
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
         if (observer == null) {
             observer = object : RecyclerView.AdapterDataObserver() {
                 override fun onChanged() {
@@ -38,6 +46,12 @@ abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var col
             }
         }
         registerAdapterDataObserver(observer!!)
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                onAttach = false
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+        })
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
@@ -65,7 +79,17 @@ abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var col
         return holder
     }
 
-    override fun onBindViewHolder(holder: Holder, position: Int) = fillContent(holder, position, getItem(position))
+    override fun onBindViewHolder(holder: Holder, position: Int) {
+        fillContent(holder, position, getItem(position))
+        if (showItemAnimation) setAnimation(holder.rootView, position)
+    }
+
+    private fun setAnimation(rootView: View, position: Int) {
+        if (position > lastAnimatePosition) {
+            ItemAnimation.rightToLeftFadeIn(rootView, if (onAttach) position else -1)
+            this.lastAnimatePosition = position
+        }
+    }
 
     abstract fun setViewLayout(type: Int): Int
 

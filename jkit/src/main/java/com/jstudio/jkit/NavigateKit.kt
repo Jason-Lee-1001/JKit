@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment
 /**
  * Created by Jason
  */
-inline fun <reified T : Fragment> newFragment(vararg pairs: Pair<String, Any?>): T {
+inline fun <reified T : Fragment> newFragment(vararg args: Pair<String, Any?>): T {
     val fragment: T = T::class.java.newInstance()
-    if (pairs.isNotEmpty()) fragment.arguments = bundleOf(*pairs)
+    if (args.isNotEmpty()) fragment.arguments = bundleOf(*args)
     return fragment
 }

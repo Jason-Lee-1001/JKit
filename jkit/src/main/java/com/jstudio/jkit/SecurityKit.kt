@@ -52,7 +52,7 @@ fun String.desDecrypt(key: String, charset: Charset = Charsets.UTF_8): String {
 /**
  * 将字符串转字节数组
  */
-fun convertHexString(content: String): ByteArray {
+private fun convertHexString(content: String): ByteArray {
     val digest = ByteArray(content.length / 2)
     for (i in digest.indices) {
         val byteString = content.substring(2 * i, 2 * i + 2)
@@ -65,7 +65,7 @@ fun convertHexString(content: String): ByteArray {
 /**
  * 将字节数组转换成字符串
  */
-fun toHexString(array: ByteArray): String {
+private fun toHexString(array: ByteArray): String {
     val hexString = StringBuilder()
     for (i in array.indices) {
         var plainText = Integer.toHexString(0xff and array[i].toInt())

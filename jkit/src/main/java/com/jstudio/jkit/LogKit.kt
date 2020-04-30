@@ -6,10 +6,12 @@ import android.util.Log
  * Created by Jason
  */
 class LogKit private constructor() {
+
     companion object {
         private val instance = LogKit()
 
         private var enable: Boolean = BuildConfig.DEBUG
+
 
         @JvmStatic
         fun enableLogger(enable: Boolean) {
@@ -64,3 +66,5 @@ class LogKit private constructor() {
         return null
     }
 }
+
+fun Any.log(msg: Any, tag: String = this.javaClass.name) = LogKit.v(tag, msg.toString())
