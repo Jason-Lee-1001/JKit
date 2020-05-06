@@ -93,9 +93,9 @@ object ItemAnimation {
         view.alpha = 0.0f
         val animatorSet = AnimatorSet()
         val objectAnimator: ObjectAnimator = ObjectAnimator.ofFloat(view, "alpha", 0.0f, 0.5f, 1.0f)
-        val delay = if (position == -1) 250L else (position + 1) * 100L
+        val delay = if (position == -1) 200L else (position + 1) * 100L
         objectAnimator.startDelay = delay
-        objectAnimator.duration = 250L
+        objectAnimator.duration = 200L
         animatorSet.play(objectAnimator as Animator)
         animatorSet.start()
     }
@@ -108,10 +108,10 @@ object ItemAnimation {
         val animatorSet = AnimatorSet()
         val transXAnimator: ObjectAnimator = ObjectAnimator.ofFloat(view, "translationX", view.x + 30, 0f)
         transXAnimator.startDelay = delay
-        transXAnimator.duration = 250L
+        transXAnimator.duration = 200L
         val alphaAnimator: ObjectAnimator = ObjectAnimator.ofFloat(view, "alpha", 0.0f, 0.5f, 1.0f)
         alphaAnimator.startDelay = delay
-        alphaAnimator.duration = 250L
+        alphaAnimator.duration = 200L
 
         animatorSet.playTogether(transXAnimator as Animator, alphaAnimator as Animator)
         animatorSet.start()

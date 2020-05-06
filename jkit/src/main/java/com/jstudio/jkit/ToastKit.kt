@@ -18,7 +18,7 @@ class ToastKit private constructor(context: Context) {
         private var instance: ToastKit? = null
 
         fun init(context: Context) {
-            if (instance == null) instance = ToastKit(context)
+            if (instance == null) instance = ToastKit(context.applicationContext)
         }
 
         fun show(content: String, duration: Int = Toast.LENGTH_SHORT) {
@@ -39,7 +39,7 @@ class ToastKit private constructor(context: Context) {
         }
     }
 
-    private val normalToast by lazy { Toast(context.applicationContext) }
+    private val normalToast by lazy { Toast.makeText(context.applicationContext, "", Toast.LENGTH_SHORT) }
     private val toastPool: SparseArray<Toast> = SparseArray()
     private val appContext = context.applicationContext
 

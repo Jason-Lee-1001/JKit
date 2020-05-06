@@ -7,11 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.IdRes
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jstudio.jkit.ItemAnimation
 
 
-abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var collection: C?, var showItemAnimation: Boolean = false) :
+abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var collection: C?, private var animationType: Int = -1) :
     RecyclerView.Adapter<BaseRecyclerAdapter.Holder>() {
 
     private var onItemClickBlock: ((v: View, p: Int, id: Long) -> Unit)? = null
@@ -34,6 +35,12 @@ abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var col
 
     fun setDataSetChangedBlock(block: (count: Int) -> Unit) {
         this.onDataSetChangedBlock = block
+    }
+
+    fun setData(data: C?, diffCallback: DiffUtil.Callback? = null, detectMoves: Boolean = true) {
+        collection = data
+        if (diffCallback == null) notifyDataSetChanged()
+        else DiffUtil.calculateDiff(diffCallback, detectMoves).dispatchUpdatesTo(this)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -81,12 +88,15 @@ abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var col
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         fillContent(holder, position, getItem(position))
-        if (showItemAnimation) setAnimation(holder.rootView, position)
+        if (animationType > 0) setAnimation(holder.rootView, position)
     }
 
     private fun setAnimation(rootView: View, position: Int) {
         if (position > lastAnimatePosition) {
-            ItemAnimation.rightToLeftFadeIn(rootView, if (onAttach) position else -1)
+            when (animationType) {
+                1 -> ItemAnimation.fadeIn(rootView, if (onAttach) position else -1)
+                2 -> ItemAnimation.rightToLeftFadeIn(rootView, if (onAttach) position else -1)
+            }
             this.lastAnimatePosition = position
         }
     }

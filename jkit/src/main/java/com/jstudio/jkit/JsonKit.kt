@@ -17,7 +17,7 @@ inline fun <reified T> parseToObject(json: String): T = instance.fromJson<T>(jso
 inline fun <reified T> parseToObject(element: JsonElement): T = instance.fromJson(element, T::class.java)
 
 @Throws(JsonSyntaxException::class)
-inline fun <reified T> parseToJson(obj: Any) = instance.toJson(obj)
+fun parseToJson(obj: Any) = instance.toJson(obj)
 
 @Throws(JsonSyntaxException::class)
 inline fun <reified T> parseToList(json: String): ArrayList<T> = parseToList(JsonParser.parseString(json))
