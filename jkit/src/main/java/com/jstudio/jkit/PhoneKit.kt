@@ -1,3 +1,5 @@
+@file:JvmName("PhoneKit")
+
 package com.jstudio.jkit
 
 import android.content.Context

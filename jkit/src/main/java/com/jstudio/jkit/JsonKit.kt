@@ -1,3 +1,5 @@
+@file:JvmName("JsonKit")
+
 package com.jstudio.jkit
 
 import com.google.gson.Gson
@@ -29,4 +31,3 @@ inline fun <reified T> parseToList(element: JsonElement): ArrayList<T> {
     array.forEach { list.add(parseToObject(it)) }
     return list
 }
-

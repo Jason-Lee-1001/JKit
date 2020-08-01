@@ -1,3 +1,5 @@
+@file:JvmName("SecurityKit")
+
 package com.jstudio.jkit
 
 import java.nio.charset.Charset

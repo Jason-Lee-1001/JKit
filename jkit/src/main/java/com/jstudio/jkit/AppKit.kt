@@ -2,7 +2,7 @@ package com.jstudio.jkit
 
 import android.app.Activity
 import android.app.Application
-import android.app.Service
+import android.content.Context
 import android.os.Bundle
 import java.util.*
 import kotlin.system.exitProcess
@@ -13,7 +13,6 @@ import kotlin.system.exitProcess
 class AppKit private constructor() : Application.ActivityLifecycleCallbacks {
 
     private var activityStack: Stack<Activity> = Stack()
-    private var serviceList: LinkedList<Service> = LinkedList()
 
     fun init(app: Application) = app.registerActivityLifecycleCallbacks(this)
 
@@ -58,38 +57,22 @@ class AppKit private constructor() : Application.ActivityLifecycleCallbacks {
 
     fun getActivityStackSize(): Int = activityStack.size
 
-    fun getSizeOfServices(): Int = serviceList.size
-
     fun topActivity(): Activity? = activityStack.takeIf { it.size > 0 }?.lastElement()
 
     fun bottomActivity(): Activity? = activityStack.takeIf { it.size > 0 }?.lastElement()
 
-    fun addService(service: Service) {
-        serviceList.add(service)
+    fun finishAllActivity(except: Activity? = null) {
+        activityStack.forEach { if (except != it) it.finish() }
     }
 
-    fun removeService(service: Service) = serviceList.remove(service)
-
-    fun stopAllService() {
-        serviceList.forEach { it.stopSelf() }
-        serviceList.clear()
-    }
-
-    fun finishAllActivity() {
-        activityStack.forEach { it.finish() }
-        activityStack.clear()
-    }
+    fun restartApp(context: Context) = context.applicationContext.restartApp()
 
     @Synchronized
     fun terminateApp() {
-        stopAllService()
         finishAllActivity()
         exitProcess(0)
     }
 
     @Synchronized
-    fun quit() {
-        stopAllService()
-        finishAllActivity()
-    }
+    fun quit() = finishAllActivity()
 }

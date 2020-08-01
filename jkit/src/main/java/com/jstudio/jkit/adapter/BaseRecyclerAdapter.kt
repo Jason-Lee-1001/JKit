@@ -1,23 +1,22 @@
 package com.jstudio.jkit.adapter
 
-import android.content.Context
-import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.annotation.IdRes
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jstudio.jkit.ItemAnimation
+import kotlinx.android.extensions.CacheImplementation
+import kotlinx.android.extensions.ContainerOptions
+import kotlinx.android.extensions.LayoutContainer
 
 
-abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var collection: C?, private var animationType: Int = -1) :
+abstract class BaseRecyclerAdapter<C, E>(var collection: C?, private var animationType: Int = -1) :
     RecyclerView.Adapter<BaseRecyclerAdapter.Holder>() {
 
-    private var onItemClickBlock: ((v: View, p: Int, id: Long) -> Unit)? = null
-    private var onItemLongClickBlock: ((v: View, p: Int, id: Long) -> Boolean)? = null
-    private var onDataSetChangedBlock: ((c: Int) -> Unit)? = null
+    var onItemClickBlock: ((v: View, p: Int, id: Long) -> Unit)? = null
+    var onItemLongClickBlock: ((v: View, p: Int, id: Long) -> Boolean)? = null
+    var onDataSetChangedBlock: ((c: Int) -> Unit)? = null
 
     private var onAttach = true
     private var lastAnimatePosition = -1
@@ -25,19 +24,7 @@ abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var col
 
     abstract fun getItem(position: Int): E
 
-    fun setOnItemClickListener(block: (view: View, position: Int, id: Long) -> Unit) {
-        this.onItemClickBlock = block
-    }
-
-    fun setOnItemLongClickBlock(block: (view: View, position: Int, id: Long) -> Boolean) {
-        this.onItemLongClickBlock = block
-    }
-
-    fun setDataSetChangedBlock(block: (count: Int) -> Unit) {
-        this.onDataSetChangedBlock = block
-    }
-
-    fun setData(data: C?, diffCallback: DiffUtil.Callback? = null, detectMoves: Boolean = true) {
+    open fun setData(data: C?, diffCallback: DiffUtil.Callback? = null, detectMoves: Boolean = true) {
         collection = data
         if (diffCallback == null) notifyDataSetChanged()
         else DiffUtil.calculateDiff(diffCallback, detectMoves).dispatchUpdatesTo(this)
@@ -75,20 +62,22 @@ abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var col
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val itemView = LayoutInflater.from(parent.context).inflate(setViewLayout(viewType), parent, false)
         val holder = Holder(itemView, viewType)
-        val adapterPosition = holder.adapterPosition
         itemView.setOnClickListener {
+            val adapterPosition = holder.adapterPosition
+            if (adapterPosition == RecyclerView.NO_POSITION) return@setOnClickListener
             onItemClickBlock?.invoke(it, adapterPosition, getItemId(adapterPosition))
         }
         itemView.setOnLongClickListener {
-            onItemLongClickBlock?.invoke(it, adapterPosition, getItemId(adapterPosition))
-            false
+            val adapterPosition = holder.adapterPosition
+            if (adapterPosition == RecyclerView.NO_POSITION) return@setOnLongClickListener false
+            return@setOnLongClickListener onItemLongClickBlock?.invoke(it, adapterPosition, getItemId(adapterPosition)) ?: false
         }
         return holder
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         fillContent(holder, position, getItem(position))
-        if (animationType > 0) setAnimation(holder.rootView, position)
+        if (animationType > 0) setAnimation(holder.containerView, position)
     }
 
     private fun setAnimation(rootView: View, position: Int) {
@@ -105,27 +94,6 @@ abstract class BaseRecyclerAdapter<C, E>(protected var context: Context, var col
 
     abstract fun fillContent(holder: Holder, position: Int, entity: E)
 
-    class Holder(val rootView: View, val viewType: Int) : RecyclerView.ViewHolder(rootView) {
-
-        private val views: SparseArray<View> = SparseArray()
-
-        fun <T : View> getView(@IdRes viewId: Int): T? {
-            var view: View? = views.get(viewId)
-            if (view == null) {
-                view = rootView.findViewById(viewId)
-                if (view != null) views.put(viewId, view)
-            }
-            return view as T?
-        }
-
-        fun setTextByString(viewId: Int, text: CharSequence): Holder {
-            getView<TextView>(viewId)?.text = text
-            return this
-        }
-
-        fun setTextByResource(viewId: Int, resId: Int): Holder {
-            getView<TextView>(viewId)?.setText(resId)
-            return this
-        }
-    }
+    @ContainerOptions(CacheImplementation.SPARSE_ARRAY)
+    class Holder(override val containerView: View, val viewType: Int) : RecyclerView.ViewHolder(containerView), LayoutContainer
 }

@@ -1,3 +1,5 @@
+@file:JvmName("AnimateKit")
+
 package com.jstudio.jkit
 
 import android.animation.Animator
@@ -12,6 +14,9 @@ import android.view.animation.Transformation
 /**
  * Created by Jason
  */
+/**
+ * 旋转
+ */
 inline fun View.rotate(degree: Float, duration: Long = 200L, crossinline onEnd: (animator: Animator) -> Unit = {}) {
     animate().setDuration(duration).rotation(degree).setListener(object : Animator.AnimatorListener {
         override fun onAnimationStart(animation: Animator) {}
@@ -21,6 +26,9 @@ inline fun View.rotate(degree: Float, duration: Long = 200L, crossinline onEnd: 
     })
 }
 
+/**
+ * 淡入
+ */
 inline fun View.fadeIn(duration: Long = 200L, crossinline onEnd: (animator: Animator) -> Unit = {}) {
     animate().setDuration(duration).alpha(1f).setListener(object : Animator.AnimatorListener {
         override fun onAnimationStart(animation: Animator) {}
@@ -30,6 +38,9 @@ inline fun View.fadeIn(duration: Long = 200L, crossinline onEnd: (animator: Anim
     })
 }
 
+/**
+ * 淡出
+ */
 inline fun View.fadeOut(duration: Long = 500L, crossinline onEnd: (animator: Animator) -> Unit = {}) {
     animate().setDuration(duration).alpha(0f).setListener(object : Animator.AnimatorListener {
         override fun onAnimationStart(animation: Animator) {}
