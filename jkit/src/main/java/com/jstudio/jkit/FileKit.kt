@@ -68,6 +68,7 @@ fun InputStream.toFile(file: File?): String? {
  * 阻塞当前线程方法，拷贝Uri所指向的文件到目标目录
  * @return 返回文件路径
  */
+@Throws(Exception::class)
 fun copyFileFromUri(context: Context, uri: Uri, destFile: File): String? {
     val inputStream = context.contentResolver.openInputStream(uri)
     return inputStream?.toFile(destFile)

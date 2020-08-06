@@ -46,7 +46,7 @@ class AppKit private constructor() : Application.ActivityLifecycleCallbacks {
         log("${activity.javaClass.simpleName} stopped")
     }
 
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle?) {
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
         log("${activity.javaClass.simpleName} saved state")
     }
 

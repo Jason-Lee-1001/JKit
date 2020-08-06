@@ -19,6 +19,9 @@ class LogKit private constructor() {
         }
 
         @JvmStatic
+        fun isEnable(): Boolean = enable
+
+        @JvmStatic
         fun v(tag: String, msg: String) {
             if (!enable) return
             val detail = instance.detail()
@@ -65,6 +68,10 @@ class LogKit private constructor() {
         }
         return null
     }
+}
+
+fun whenDebugging(action: () -> Unit) {
+    if (LogKit.isEnable()) action()
 }
 
 fun Any.log(msg: Any, tag: String = this.javaClass.name) = LogKit.v(tag, msg.toString())

@@ -33,11 +33,8 @@ fun Number?.isNullOrZero(): Boolean = (this == null || this == 0)
 fun Number?.isNullOr(num: Number): Boolean = (this == null || this.toDouble() == num.toDouble())
 
 /**
- * debug 模式下才执行的代码块
+ * 当满足条件时执行 action
  */
-inline fun whenDebugging(action: () -> Unit): Boolean = if (BuildConfig.DEBUG) {
-    action()
-    true
-} else {
-    false
+inline fun takeActionWhen(enable: Boolean, action: () -> Unit) {
+    if (enable) action()
 }

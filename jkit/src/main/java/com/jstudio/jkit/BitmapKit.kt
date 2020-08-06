@@ -28,6 +28,7 @@ fun saveBitmap(bitmap: Bitmap, folder: String, name: String, quality: Int = 80, 
         Bitmap.CompressFormat.JPEG -> "$folder${File.separator}$name"
         Bitmap.CompressFormat.PNG -> "$folder${File.separator}$name"
         Bitmap.CompressFormat.WEBP -> "$folder${File.separator}$name"
+        else -> "$folder${File.separator}$name"
     }
     return try {
         val fos = FileOutputStream(path)

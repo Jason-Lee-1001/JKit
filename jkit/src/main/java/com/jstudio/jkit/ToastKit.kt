@@ -70,7 +70,7 @@ class ToastKit private constructor(context: Context) {
             toastPool[layoutRes] = toast
         }
         gravity?.let { toast.setGravity(gravity, xOffset, yOffset) }
-        action(toast.view)
+        action(toast.view!!)
         toast.duration = duration
         toast.show()
     }

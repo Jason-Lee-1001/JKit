@@ -128,3 +128,22 @@ fun Activity.recordVideo(
         false
     }
 }
+
+/**
+ * 选文件
+ */
+fun Activity.pickFile(requestCode: Int, mimeType: String = "*/*") = startActivityForResult(Intent().apply {
+    action = Intent.ACTION_OPEN_DOCUMENT
+    type = mimeType
+    addCategory(Intent.CATEGORY_OPENABLE)
+}, requestCode)
+
+/**
+ * 选图片
+ */
+fun Activity.pickImage(requestCode: Int) = pickFile(requestCode, "image/*")
+
+/**
+ * 选视频
+ */
+fun Activity.pickVideo(requestCode: Int) = pickFile(requestCode, "video/*")
