@@ -1,2 +1,3 @@
 rootProject.name='JKit'
+include ':loadinglayout'
 include ':jkit'

@@ -18,6 +18,7 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
 import androidx.core.view.doOnPreDraw
 import androidx.core.widget.addTextChangedListener
@@ -166,10 +167,10 @@ inline fun TextView.onAfterTextChanged(crossinline action: (text: Editable?) -> 
 }
 
 fun TextView.setCompoundDrawable(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {
-    val leftDrawable = if (left != null) context.getDrawable(left) else null
-    val topDrawable = if (top != null) context.getDrawable(top) else null
-    val rightDrawable = if (right != null) context.getDrawable(right) else null
-    val bottomDrawable = if (bottom != null) context.getDrawable(bottom) else null
+    val leftDrawable = if (left != null) ContextCompat.getDrawable(context, left) else null
+    val topDrawable = if (top != null) ContextCompat.getDrawable(context, top) else null
+    val rightDrawable = if (right != null) ContextCompat.getDrawable(context, right) else null
+    val bottomDrawable = if (bottom != null) ContextCompat.getDrawable(context, bottom) else null
     setCompoundDrawablesWithIntrinsicBounds(leftDrawable, topDrawable, rightDrawable, bottomDrawable)
 }
 
