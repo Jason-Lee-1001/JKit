@@ -30,11 +30,11 @@ abstract class Callback constructor(view: View?, private var context: Context?, 
         return rootView
     }
 
-    protected fun onBuildView(context: Context?): View? {
+    protected open fun onBuildView(context: Context?): View? {
         return null
     }
 
-    protected fun onReloadEvent(context: Context?, view: View?): Boolean {
+    protected open fun onReloadEvent(context: Context?, view: View?): Boolean {
         return false
     }
 
@@ -69,7 +69,7 @@ abstract class Callback constructor(view: View?, private var context: Context?, 
 
     protected fun onViewCreate(context: Context?, view: View) {}
 
-    fun onAttach(context: Context, view: View) {}
+    open fun onAttach(context: Context, view: View) {}
 
-    fun onDetach() {}
+    open fun onDetach() {}
 }
