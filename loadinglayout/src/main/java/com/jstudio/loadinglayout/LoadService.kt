@@ -9,10 +9,15 @@ import android.view.View
  * Created by Jason
  */
 class LoadService<T> internal constructor(
-    private var mapper: ((T) -> Class<out Callback>)? = null,
+    builder: LoadSir.Builder,
     private val loadLayout: LoadLayout,
-    builder: LoadSir.Builder
+    private var mapper: ((T) -> Class<out Callback>)? = null
 ) {
+
+    init {
+        initCallback(builder)
+    }
+
     private fun initCallback(builder: LoadSir.Builder) {
         val callbacks: List<Callback> = builder.callbacks
         val defaultCallback: Class<out Callback>? = builder.defaultCallback
@@ -28,7 +33,7 @@ class LoadService<T> internal constructor(
 
     fun showCallback(callback: Class<out Callback>) = loadLayout.showCallback(callback)
 
-    fun mapTo(t: T) {
+    fun showConvertedCallback(t: T) {
         requireNotNull(mapper) { "You haven't set the mapper." }
         loadLayout.showCallback(mapper!!.invoke(t))
     }
@@ -38,11 +43,7 @@ class LoadService<T> internal constructor(
     fun getCurrentCallback(): Class<out Callback>? = loadLayout.getCurrentCallback()
 
     fun setCallBack(callback: Class<out Callback>, transport: ((Context, View) -> Unit)): LoadService<T> {
-        loadLayout.findCallbackView(callback)?.let { view -> transport.invoke(loadLayout.context, view) }
+        loadLayout.findViewByCallback(callback)?.let { view -> transport.invoke(loadLayout.context, view) }
         return this
-    }
-
-    init {
-        initCallback(builder)
     }
 }

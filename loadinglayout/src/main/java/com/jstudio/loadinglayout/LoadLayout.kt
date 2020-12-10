@@ -5,14 +5,13 @@ import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import java.util.*
 
 /**
  * Created by Jason
  */
 class LoadLayout(context: Context) : FrameLayout(context) {
 
-    private val callbacks: MutableMap<Class<out Callback>, Callback?> = HashMap()
+    private val callbacks: MutableMap<Class<out Callback>, Callback> = hashMapOf()
 
     private var onReloadListener: Callback.OnReloadListener? = null
     private var preCallback: Class<out Callback>? = null
@@ -42,12 +41,10 @@ class LoadLayout(context: Context) : FrameLayout(context) {
 
     fun showCallback(callback: Class<out Callback>) {
         checkCallbackExist(callback)
-        if (isMainThread()) showCallbackView(callback) else postToMainThread(callback)
+        if (isMainThread()) showCallbackView(callback) else post { showCallbackView(callback) }
     }
 
     fun getCurrentCallback(): Class<out Callback>? = curCallback
-
-    private fun postToMainThread(status: Class<out Callback>) = post { showCallbackView(status) }
 
     private fun showCallbackView(status: Class<out Callback>) {
         preCallback?.let {
@@ -72,7 +69,7 @@ class LoadLayout(context: Context) : FrameLayout(context) {
         curCallback = status
     }
 
-    fun findCallbackView(callback: Class<out Callback>): View? = callbacks[callback]?.obtainRootView()
+    fun findViewByCallback(callback: Class<out Callback>): View? = callbacks[callback]?.obtainRootView()
 
     private fun checkCallbackExist(callback: Class<out Callback>) {
         require(callbacks.containsKey(callback)) { "The Callback (${callback.simpleName}) is nonexistent." }

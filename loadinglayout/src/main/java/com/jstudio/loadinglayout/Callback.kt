@@ -24,7 +24,7 @@ abstract class Callback constructor(view: View?, private var context: Context?, 
         if (rootView == null) rootView = View.inflate(context, onCreateView(), null)
         rootView?.setOnClickListener(View.OnClickListener { v ->
             if (onReloadEvent(context, rootView)) return@OnClickListener
-            onReloadListener?.onReload(v)
+            onReloadListener?.onReload(this.javaClass, v)
         })
         onViewCreate(context, rootView!!)
         return rootView
@@ -62,7 +62,7 @@ abstract class Callback constructor(view: View?, private var context: Context?, 
     }
 
     interface OnReloadListener : Serializable {
-        fun onReload(v: View)
+        fun onReload(callback: Class<out Callback>, v: View)
     }
 
     protected abstract fun onCreateView(): Int

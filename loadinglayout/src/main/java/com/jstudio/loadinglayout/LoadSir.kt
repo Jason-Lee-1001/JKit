@@ -24,7 +24,7 @@ class LoadSir private constructor(builder: Builder? = null) {
     ): LoadService<T> {
         val targetContext = hasTarget(target, builder.targetList)
         val loadLayout: LoadLayout = targetContext.replaceView(target, onReloadListener)
-        return LoadService(mapper, loadLayout, builder)
+        return LoadService(builder, loadLayout, mapper)
     }
 
     class Builder {
