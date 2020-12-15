@@ -1,5 +1,6 @@
 package com.jstudio.loadinglayout
 
+import android.view.View
 import java.util.*
 
 /**
@@ -19,11 +20,17 @@ class LoadSir private constructor(builder: Builder? = null) {
 
     fun <T> register(
         target: Any,
-        onReloadListener: Callback.OnReloadListener? = null,
+        onReloadListener: ((Class<out Callback>, View) -> Unit)? = null,
         mapper: ((T) -> Class<out Callback>)? = null
     ): LoadService<T> {
         val targetContext = hasTarget(target, builder.targetList)
-        val loadLayout: LoadLayout = targetContext.replaceView(target, onReloadListener)
+        val loadLayout: LoadLayout = targetContext.replaceView(
+            target,
+            if (onReloadListener != null) object : Callback.OnReloadListener {
+                override fun onReload(callback: Class<out Callback>, v: View) = onReloadListener.invoke(callback, v)
+            }
+            else null
+        )
         return LoadService(builder, loadLayout, mapper)
     }
 
