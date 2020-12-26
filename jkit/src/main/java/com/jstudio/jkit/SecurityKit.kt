@@ -10,10 +10,6 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.DESKeySpec
 import javax.crypto.spec.IvParameterSpec
 
-fun String?.isDigital(): Boolean {
-    return false
-}
-
 /**
  * 将字符串加密成 MD5 字符串
  */

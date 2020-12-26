@@ -35,12 +35,19 @@ fun Context.restartApp() {
 }
 
 /**
+ * activity 简单跳转界面
+ */
+fun Activity.start(destination: Class<out Activity>, vararg params: Pair<String, Number>) = startActivity(
+    Intent(this, destination).apply { params.forEach { this.putExtra(it.first, it.second) } }
+)
+
+/**
  * 是否有权限安装应用
  */
 fun Context.canInstall(): Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) packageManager.canRequestPackageInstalls() else true
 
 /**
- * intent 是否能被接收
+ * intent 是否能被应用接收处理
  */
 fun Intent.isAccessible(context: Context): Boolean = context.packageManager?.let {
     it.queryIntentActivities(this, PackageManager.MATCH_DEFAULT_ONLY).size > 0
@@ -55,7 +62,7 @@ fun Context.installApk(context: Context, apkFile: File, authority: String): Bool
         val apkUri = FileProvider.getUriForFile(this, authority, apkFile)
         install.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         install.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-        install.setDataAndType(apkUri, "application/vnd.android.package-archive")
+        install.setDataAndType(apkUri, APK_MINE_TYPE)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return if (context.canInstall() && install.isAccessible(this)) {
                 startActivity(install)
@@ -76,7 +83,7 @@ fun Context.installApk(context: Context, apkFile: File, authority: String): Bool
             }
         }
     } else {
-        install.setDataAndType(Uri.fromFile(apkFile), "application/vnd.android.package-archive")
+        install.setDataAndType(Uri.fromFile(apkFile), APK_MINE_TYPE)
         install.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return if (install.isAccessible(this)) {
             startActivity(install)
