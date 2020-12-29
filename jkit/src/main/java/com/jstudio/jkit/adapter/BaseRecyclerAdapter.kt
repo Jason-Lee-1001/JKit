@@ -30,6 +30,24 @@ abstract class BaseRecyclerAdapter<C, E>(var collection: C?, private var animati
         else DiffUtil.calculateDiff(diffCallback, detectMoves).dispatchUpdatesTo(this)
     }
 
+    open fun addData(insertIndex: Int, newList: List<E>) {
+    }
+
+    open fun addData(newData: E) {
+    }
+
+    open fun removeData(index: Int) {
+    }
+
+    open fun removeData(data: E) {
+    }
+
+    open fun setData(index: Int, data: E) {
+    }
+
+    open fun clearData() {
+    }
+
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
         if (observer == null) {

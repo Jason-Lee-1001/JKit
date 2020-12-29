@@ -9,6 +9,7 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.os.Build
 import android.os.Handler
+import android.os.Looper
 import android.view.PixelCopy
 import android.view.View
 import androidx.annotation.RequiresApi
@@ -25,10 +26,9 @@ import java.io.IOException
  */
 fun saveBitmap(bitmap: Bitmap, folder: String, name: String, quality: Int = 80, format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG): String? {
     val path = when (format) {
-        Bitmap.CompressFormat.JPEG -> "$folder${File.separator}$name"
-        Bitmap.CompressFormat.PNG -> "$folder${File.separator}$name"
-        Bitmap.CompressFormat.WEBP -> "$folder${File.separator}$name"
-        else -> "$folder${File.separator}$name"
+        Bitmap.CompressFormat.JPEG -> "$folder${File.separator}$name.jpg"
+        Bitmap.CompressFormat.PNG -> "$folder${File.separator}$name.png"
+        else -> "$folder${File.separator}$name.webp"
     }
     return try {
         val fos = FileOutputStream(path)
@@ -88,7 +88,7 @@ fun getBitmapFromView(view: View, activity: Activity, callback: (Bitmap) -> Unit
         try {
             PixelCopy.request(
                 window, Rect(viewPosInWindow[0], viewPosInWindow[1], viewPosInWindow[0] + view.width, viewPosInWindow[1] + view.height),
-                bitmap, { copyResult -> if (copyResult == PixelCopy.SUCCESS) callback(bitmap) }, Handler()
+                bitmap, { copyResult -> if (copyResult == PixelCopy.SUCCESS) callback(bitmap) }, Handler(Looper.getMainLooper())
             )
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
