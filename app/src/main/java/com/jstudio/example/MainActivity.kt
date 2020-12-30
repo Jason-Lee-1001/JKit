@@ -4,6 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.jstudio.jkit.adapter.ListAdapter
+import com.jstudio.jkit.shake
+import com.jstudio.jkit.tada
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_rv_number.*
 
@@ -16,9 +18,15 @@ class MainActivity : AppCompatActivity() {
         val adapter = Adapter(this)
         recyclerView.adapter = adapter
 
-        addBatch.setOnClickListener { adapter.addData(3, arrayListOf("abc", "bca", "cab", "ddd", "eeeeeeeee")) }
+        addBatch.setOnClickListener {
+            adapter.addData(3, arrayListOf("abc", "bca", "cab", "ddd", "eeeeeeeee"))
+            it.tada(3f)
+        }
 
-        removeLast.setOnClickListener { adapter.removeData(adapter.collection!!.lastIndex) }
+        removeLast.setOnClickListener {
+            adapter.removeData(adapter.collection!!.lastIndex)
+            it.shake(10f)
+        }
     }
 
     companion object {

@@ -2,9 +2,7 @@
 
 package com.jstudio.jkit
 
-import android.animation.Animator
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
+import android.animation.*
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -97,6 +95,67 @@ inline fun View.collapse(crossinline onEnd: (animator: Animation) -> Unit = {}) 
         override fun onAnimationRepeat(animation: Animation) {}
         override fun onAnimationEnd(animation: Animation) = onEnd(animation)
     })
+}
+
+fun View.tada(shakeFactor: Float) {
+    val scaleX = PropertyValuesHolder.ofKeyframe(
+        View.SCALE_X,
+        Keyframe.ofFloat(0f, 1f),
+        Keyframe.ofFloat(.1f, .9f),
+        Keyframe.ofFloat(.2f, .9f),
+        Keyframe.ofFloat(.3f, 1.1f),
+        Keyframe.ofFloat(.4f, 1.1f),
+        Keyframe.ofFloat(.5f, 1.1f),
+        Keyframe.ofFloat(.6f, 1.1f),
+        Keyframe.ofFloat(.7f, 1.1f),
+        Keyframe.ofFloat(.8f, 1.1f),
+        Keyframe.ofFloat(.9f, 1.1f),
+        Keyframe.ofFloat(1f, 1f)
+    )
+    val scaleY = PropertyValuesHolder.ofKeyframe(
+        View.SCALE_Y,
+        Keyframe.ofFloat(0f, 1f),
+        Keyframe.ofFloat(.1f, .9f),
+        Keyframe.ofFloat(.2f, .9f),
+        Keyframe.ofFloat(.3f, 1.1f),
+        Keyframe.ofFloat(.4f, 1.1f),
+        Keyframe.ofFloat(.5f, 1.1f),
+        Keyframe.ofFloat(.6f, 1.1f),
+        Keyframe.ofFloat(.7f, 1.1f),
+        Keyframe.ofFloat(.8f, 1.1f),
+        Keyframe.ofFloat(.9f, 1.1f),
+        Keyframe.ofFloat(1f, 1f)
+    )
+    val rotate = PropertyValuesHolder.ofKeyframe(
+        View.ROTATION,
+        Keyframe.ofFloat(0f, 0f),
+        Keyframe.ofFloat(.1f, -3f * shakeFactor),
+        Keyframe.ofFloat(.2f, -3f * shakeFactor),
+        Keyframe.ofFloat(.3f, 3f * shakeFactor),
+        Keyframe.ofFloat(.4f, -3f * shakeFactor),
+        Keyframe.ofFloat(.5f, 3f * shakeFactor),
+        Keyframe.ofFloat(.6f, -3f * shakeFactor),
+        Keyframe.ofFloat(.7f, 3f * shakeFactor),
+        Keyframe.ofFloat(.8f, -3f * shakeFactor),
+        Keyframe.ofFloat(.9f, 3f * shakeFactor),
+        Keyframe.ofFloat(1f, 0f)
+    )
+    ObjectAnimator.ofPropertyValuesHolder(this, scaleX, scaleY, rotate).setDuration(1000).start()
+}
+
+fun View.shake(shakeOffset: Float) {
+    val translateX = PropertyValuesHolder.ofKeyframe(
+        View.TRANSLATION_X,
+        Keyframe.ofFloat(0f, 0f),
+        Keyframe.ofFloat(.10f, -shakeOffset),
+        Keyframe.ofFloat(.26f, shakeOffset),
+        Keyframe.ofFloat(.42f, -shakeOffset),
+        Keyframe.ofFloat(.58f, shakeOffset),
+        Keyframe.ofFloat(.74f, -shakeOffset),
+        Keyframe.ofFloat(.90f, shakeOffset),
+        Keyframe.ofFloat(1f, 0f)
+    )
+    ObjectAnimator.ofPropertyValuesHolder(this, translateX).setDuration(1000).start()
 }
 
 object ItemAnimation {
