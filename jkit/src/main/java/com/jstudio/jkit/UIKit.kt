@@ -1,4 +1,5 @@
 @file:JvmName("UIKit")
+@file:Suppress("DEPRECATION")
 
 package com.jstudio.jkit
 
@@ -198,6 +199,34 @@ fun PopupWindow.show(anchorView: View, xOffset: Int, yOffset: Int, gravity: Int 
     contentView.systemUiVisibility = HIDE_UI_FLAG
     isFocusable = true
     update()
+}
+
+/**
+ * 自动根据 anchorView 选择位置弹出 PopupWindow，避开空间不足的问题
+ */
+fun PopupWindow.autoLocateShow(anchorView: View) {
+    val anchorLoc = IntArray(2)
+    anchorView.getLocationOnScreen(anchorLoc)
+    val anchorHeight = anchorView.height
+    val anchorWidth = anchorView.width
+
+    val screenHeight = getScreenHeight(anchorView.context)
+    val screenWidth = getScreenWidth(anchorView.context)
+
+    contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+    val popHeight = contentView.measuredHeight
+    val popWidth = contentView.measuredWidth
+
+    val popLoc = IntArray(2)
+    val needShowUp = screenHeight - anchorLoc[1] - anchorHeight < popHeight
+    if (needShowUp) popLoc[1] = anchorLoc[1] - popHeight else popLoc[1] = anchorLoc[1] + anchorHeight
+
+    popLoc[0] = when {
+        anchorLoc[0] + anchorWidth / 2 < popWidth / 2 -> 0
+        screenWidth - anchorLoc[0] - anchorWidth / 2 < popWidth / 2 -> screenWidth - popWidth
+        else -> anchorLoc[0] + anchorWidth / 2 - popWidth / 2
+    }
+    showAtLocation(anchorView, Gravity.NO_GRAVITY, popLoc[0], popLoc[1])
 }
 
 fun Context.createPopupMenu(anchorView: View, menuId: Int, gravity: Int = Gravity.START, block: Menu.() -> Unit = {}): PopupMenu {
