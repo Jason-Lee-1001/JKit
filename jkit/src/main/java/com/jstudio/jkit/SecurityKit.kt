@@ -10,6 +10,7 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.DESKeySpec
 import javax.crypto.spec.IvParameterSpec
 
+
 /**
  * 将字符串加密成 MD5 字符串
  */
@@ -50,7 +51,7 @@ fun String.desDecrypt(key: String, charset: Charset = Charsets.UTF_8): String {
 /**
  * 将字符串转字节数组
  */
-private fun convertHexString(content: String): ByteArray {
+fun convertHexString(content: String): ByteArray {
     val digest = ByteArray(content.length / 2)
     for (i in digest.indices) {
         val byteString = content.substring(2 * i, 2 * i + 2)
@@ -63,7 +64,7 @@ private fun convertHexString(content: String): ByteArray {
 /**
  * 将字节数组转换成字符串
  */
-private fun toHexString(array: ByteArray): String {
+fun toHexString(array: ByteArray): String {
     val hexString = StringBuilder()
     for (i in array.indices) {
         var plainText = Integer.toHexString(0xff and array[i].toInt())
@@ -71,4 +72,20 @@ private fun toHexString(array: ByteArray): String {
         hexString.append(plainText)
     }
     return hexString.toString().toUpperCase(Locale.ENGLISH)
+}
+
+/**
+ * 获取内容的sha1
+ */
+@Throws(Exception::class)
+fun String.toSh1String(charset: Charset = Charsets.UTF_8): String {
+    return MessageDigest.getInstance("SHA1").digest(this.toByteArray(charset)).fold("", { str, it -> str + "%02x".format(it) })
+}
+
+/**
+ * 获取内容的sha256
+ */
+@Throws(Exception::class)
+fun String.toSh256String(charset: Charset = Charsets.UTF_8): String {
+    return MessageDigest.getInstance("SHA-256").digest(this.toByteArray(charset)).fold("", { str, it -> str + "%02x".format(it) })
 }
