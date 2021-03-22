@@ -2,6 +2,7 @@
 
 package com.jstudio.jkit
 
+import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -10,7 +11,9 @@ import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.provider.Settings
+import android.view.accessibility.AccessibilityManager
 import androidx.core.content.FileProvider
+import androidx.core.content.getSystemService
 import java.io.File
 
 const val APK_MINE_TYPE = "application/vnd.android.package-archive"
@@ -154,3 +157,20 @@ fun Activity.pickImage(requestCode: Int) = pickFile(requestCode, "image/*")
  * 选视频
  */
 fun Activity.pickVideo(requestCode: Int) = pickFile(requestCode, "video/*")
+
+/**
+ * 是否授予无障碍权限
+ */
+fun isAccessibilityServiceEnable(context: Context): Boolean {
+    val service = context.getSystemService<AccessibilityManager>() ?: return false
+    return service.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK).any { it.id.contains(context.packageName) }
+}
+
+/**
+ * 是否授予显示悬浮窗权限
+ */
+fun canDrawOverlays(context: Context): Boolean = try {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) Settings.canDrawOverlays(context) else true
+} catch (e: Exception) {
+    false
+}

@@ -65,6 +65,26 @@ fun InputStream.toFile(file: File?): String? {
 }
 
 /**
+ * 将文本写入文件并返回文件路径
+ */
+@Throws(IOException::class)
+fun String.toFile(file: File?): String? {
+    if (file == null) return null
+    val os = FileOutputStream(file)
+    try {
+        os.write(toByteArray())
+    } finally {
+        try {
+            os.flush()
+            os.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    return file.absolutePath
+}
+
+/**
  * 阻塞当前线程方法，拷贝Uri所指向的文件到目标目录
  * @return 返回文件路径
  */
