@@ -15,10 +15,6 @@ class LoadService<T> internal constructor(
 ) {
 
     init {
-        initCallback(builder)
-    }
-
-    private fun initCallback(builder: LoadSir.Builder) {
         val callbacks: List<Callback> = builder.callbacks
         val defaultCallback: Class<out Callback>? = builder.defaultCallback
         if (callbacks.isNotEmpty()) {

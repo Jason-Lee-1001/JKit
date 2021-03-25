@@ -1,48 +1,27 @@
 package com.jstudio.example
 
-import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.jstudio.jkit.adapter.ListAdapter
-import com.jstudio.jkit.shake
-import com.jstudio.jkit.tada
+import com.jstudio.loadinglayout.Callback
+import com.jstudio.loadinglayout.LoadService
+import com.jstudio.loadinglayout.LoadSir
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_rv_number.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var loadService: LoadService<Any>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        LoadSir.create().addCallback(LoadingCallback()).buildDefault()
         setContentView(R.layout.activity_main)
-
-        val adapter = Adapter(this)
-        recyclerView.adapter = adapter
-
-        addBatch.setOnClickListener {
-            adapter.addData(3, arrayListOf("abc", "bca", "cab", "ddd", "eeeeeeeee"))
-            it.tada(3f)
-        }
-
-        removeLast.setOnClickListener {
-            adapter.removeData(adapter.collection!!.lastIndex)
-            it.shake(10f)
-        }
+        loadService = LoadSir.default.register(recyclerView)
     }
 
     companion object {
-        class Adapter(context: Context) : ListAdapter<String>(context, null) {
-            override fun setViewLayout(type: Int): Int = R.layout.item_rv_number
-
-            override fun fillContent(holder: Holder, position: Int, entity: String) {
-                holder.num.text = position.toString()
-                holder.content.text = entity
-                holder.add.setOnClickListener {
-                    addData(holder.adapterPosition, arrayListOf("add from $position"))
-                }
-                holder.remove.setOnClickListener {
-                    removeData(holder.adapterPosition)
-                }
-            }
+        class LoadingCallback : Callback() {
+            override fun onCreateView(): Int = R.layout.loading
         }
     }
 }

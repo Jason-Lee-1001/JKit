@@ -2,6 +2,7 @@ package com.jstudio.loadinglayout
 
 import android.content.Context
 import android.os.Looper
+import android.transition.TransitionManager
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -51,6 +52,7 @@ class LoadLayout(context: Context) : FrameLayout(context) {
             if (it == status) return
             callbacks[it]?.onDetach()
         }
+        TransitionManager.beginDelayedTransition(this)
         if (childCount > 1) removeViewAt(CALLBACK_CUSTOM_INDEX)
         for (key in callbacks.keys) {
             if (key == status) {
