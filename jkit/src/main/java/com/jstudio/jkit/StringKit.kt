@@ -64,3 +64,10 @@ fun String?.isSecondGenIdNum(): Boolean {
 fun String?.isPhone(): Boolean {
     return this?.matches(Regex("^(13|14|15|16|17|18|19)\\d{9}$")) == true
 }
+
+/**
+ * 是否为正确ip地址，也可以用于判断掩码等
+ */
+fun String?.isValidIp(): Boolean {
+    return this?.matches(Regex("(2(5[0-5]|[0-4]\\d)|[0-1]?\\d{1,2})(\\.(2(5[0-5]|[0-4]\\d)|[0-1]?\\d{1,2})){3}")) == true
+}
