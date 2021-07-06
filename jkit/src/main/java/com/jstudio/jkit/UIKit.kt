@@ -38,6 +38,7 @@ const val HIDE_UI_FLAG = (View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG
 private const val SHOW_UI_FLAG = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
 private var sDecorViewDelta = 0
+val textWatcherTagId by lazy { View.generateViewId() }
 
 val Float.dp get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, Resources.getSystem().displayMetrics)
 
@@ -162,9 +163,9 @@ fun getNavBarHeight(): Int {
 }
 
 inline fun TextView.onAfterTextChanged(crossinline action: (text: Editable?) -> Unit) {
-    (getTag(R.id.jkit_text_watcher_tag_key) as? TextWatcher)?.let { oldWatcher -> removeTextChangedListener(oldWatcher) }
+    (getTag(textWatcherTagId) as? TextWatcher)?.let { oldWatcher -> removeTextChangedListener(oldWatcher) }
     val watcher = addTextChangedListener(afterTextChanged = action)
-    this.setTag(R.id.jkit_text_watcher_tag_key, watcher)
+    this.setTag(textWatcherTagId, watcher)
 }
 
 fun TextView.setCompoundDrawable(left: Int? = null, top: Int? = null, right: Int? = null, bottom: Int? = null) {

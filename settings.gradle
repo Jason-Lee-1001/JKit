@@ -1,4 +1,4 @@
 rootProject.name='JKit'
-include ':app'
 include ':loadinglayout'
 include ':jkit'
+include ':app'
