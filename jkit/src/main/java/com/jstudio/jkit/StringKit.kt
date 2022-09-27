@@ -2,6 +2,8 @@
 
 package com.jstudio.jkit
 
+import java.util.regex.Pattern
+
 /**
  * Created by Jason
  */
@@ -12,6 +14,14 @@ package com.jstudio.jkit
 fun combineString(divider: String, vararg fragments: String?): String {
     return if (fragments.isNullOrEmpty()) ""
     else fragments.reduce { acc, s -> if (s.isNullOrEmpty()) acc else "$acc$divider$s" } ?: ""
+}
+
+/**
+ * 组合字符串，并添加分隔符内容
+ */
+fun combineString(divider: String, stringList: MutableList<String>?): String {
+    return if (stringList.isNullOrEmpty()) ""
+    else stringList.reduce { acc, s -> if (s.isEmpty()) acc else "$acc$divider$s" }
 }
 
 /**
@@ -70,4 +80,20 @@ fun String?.isPhone(): Boolean {
  */
 fun String?.isValidIp(): Boolean {
     return this?.matches(Regex("(2(5[0-5]|[0-4]\\d)|[0-1]?\\d{1,2})(\\.(2(5[0-5]|[0-4]\\d)|[0-1]?\\d{1,2})){3}")) == true
+}
+
+/**
+ * 判断是否为 email 地址
+ * true 表示当前是 email
+ */
+fun String?.isMail(): Boolean {
+    val flag: Boolean = try {
+        val check = "^[\\w-]+(\\.[\\w-]+)*@[\\w-]+(\\.[\\w-]+)+$"
+        val regex = Pattern.compile(check)
+        val matcher = regex.matcher(this ?: return false)
+        matcher.matches()
+    } catch (e: Exception) {
+        false
+    }
+    return flag
 }

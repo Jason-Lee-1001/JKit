@@ -6,6 +6,7 @@ import android.animation.*
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.view.animation.DecelerateInterpolator
 import android.view.animation.Transformation
 
 
@@ -46,6 +47,30 @@ inline fun View.fadeOut(duration: Long = 500L, crossinline onEnd: (animator: Ani
         override fun onAnimationCancel(animation: Animator) {}
         override fun onAnimationEnd(animation: Animator) = onEnd(animation)
     })
+}
+
+/**
+ * 缩放
+ */
+inline fun View.scale(fraction: Float, duration: Long = 300L, crossinline onEnd: (animator: Animator) -> Unit = {}) {
+    animate().setDuration(duration).scaleX(fraction).scaleY(fraction).setListener(object : Animator.AnimatorListener {
+        override fun onAnimationStart(animation: Animator) {}
+        override fun onAnimationRepeat(animation: Animator) {}
+        override fun onAnimationCancel(animation: Animator) {}
+        override fun onAnimationEnd(animation: Animator) = onEnd(animation)
+    })
+}
+
+/**
+ * Float 数值变换
+ */
+inline fun floatAnimate(startDelay: Long, duration: Long, vararg values: Float, crossinline block: (Float) -> Unit) {
+    ValueAnimator.ofFloat(*values).apply {
+        setStartDelay(startDelay)
+        setDuration(duration)
+        interpolator = DecelerateInterpolator()
+        addUpdateListener { block(it.animatedValue as Float) }
+    }.start()
 }
 
 /**
@@ -97,6 +122,9 @@ inline fun View.collapse(crossinline onEnd: (animator: Animation) -> Unit = {}) 
     })
 }
 
+/**
+ * 强调动画
+ */
 fun View.tada(shakeFactor: Float) {
     val scaleX = PropertyValuesHolder.ofKeyframe(
         View.SCALE_X,
@@ -143,6 +171,9 @@ fun View.tada(shakeFactor: Float) {
     ObjectAnimator.ofPropertyValuesHolder(this, scaleX, scaleY, rotate).setDuration(1000).start()
 }
 
+/**
+ * 震荡动画
+ */
 fun View.shake(shakeOffset: Float) {
     val translateX = PropertyValuesHolder.ofKeyframe(
         View.TRANSLATION_X,

@@ -10,7 +10,12 @@ import androidx.annotation.RequiresApi
 /**
  * Created by Jason
  */
-fun Context.androidId(): String = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+private var androidId: String = ""
+
+fun Context.androidId(): String {
+    if (androidId.isEmpty()) androidId = Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
+    return androidId
+}
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 fun supportX86(): Boolean = Build.SUPPORTED_ABIS?.contains("x86") ?: false

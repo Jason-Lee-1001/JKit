@@ -5,6 +5,7 @@ package com.jstudio.jkit
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -25,3 +26,9 @@ fun Fragment.colorRes(@ColorRes resId: Int): Int = activity?.colorRes(resId) ?: 
 fun Context.drawable(@DrawableRes resId: Int): Drawable = ContextCompat.getDrawable(this, resId)!!
 
 fun Fragment.drawable(@DrawableRes resId: Int): Drawable? = activity?.drawable(resId)
+
+fun forAttrColor(context: Context, attrId: Int): Int {
+    val typedValue = TypedValue()
+    context.theme.resolveAttribute(attrId, typedValue, true)
+    return ContextCompat.getColor(context, typedValue.resourceId)
+}

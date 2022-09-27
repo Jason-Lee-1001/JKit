@@ -49,7 +49,10 @@ fun InputStream.toFile(file: File?): String? {
     try {
         var bytesRead = 0
         val buffer = ByteArray(8192)
-        while ({ bytesRead = read(buffer, 0, 8192); bytesRead }() != -1) {
+        while (run {
+                bytesRead = read(buffer, 0, 8192)
+                bytesRead
+            } != -1) {
             os.write(buffer, 0, bytesRead)
         }
     } finally {
@@ -92,4 +95,30 @@ fun String.toFile(file: File?): String? {
 fun copyFileFromUri(context: Context, uri: Uri, destFile: File): String? {
     val inputStream = context.contentResolver.openInputStream(uri)
     return inputStream?.toFile(destFile)
+}
+
+/**
+ * 获取文件大小
+ */
+@Throws(Exception::class)
+fun getFolderSize(file: File): Long {
+    var size: Long = 0
+    try {
+        val fileList = file.listFiles() ?: return size
+        fileList.forEach { size = if (it.isDirectory) size + getFolderSize(it) else size + it.length() }
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
+    return size
+}
+
+/**
+ * 删除目录
+ */
+fun deleteDir(dir: File?) {
+    if (dir != null && dir.isDirectory) {
+        val children = dir.listFiles()
+        children?.forEach { deleteDir(it) }
+    }
+    dir?.delete()
 }

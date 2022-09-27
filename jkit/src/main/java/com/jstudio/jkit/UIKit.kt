@@ -38,6 +38,7 @@ const val HIDE_UI_FLAG = (View.SYSTEM_UI_FLAG_LOW_PROFILE or View.SYSTEM_UI_FLAG
 private const val SHOW_UI_FLAG = View.SYSTEM_UI_FLAG_VISIBLE or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 
 private var sDecorViewDelta = 0
+
 val textWatcherTagId by lazy { View.generateViewId() }
 
 val Float.dp get() = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, Resources.getSystem().displayMetrics)
@@ -46,9 +47,9 @@ fun Context.dp2px(dp: Int): Int = (dp * resources.displayMetrics.density + 0.5f)
 
 fun View.dp2px(dp: Int): Int = (dp * resources.displayMetrics.density + 0.5f).toInt()
 
-fun getScreenWidth(context: Context): Int = context.resources.displayMetrics.widthPixels
+fun Context.getScreenWidth(): Int = resources.displayMetrics.widthPixels
 
-fun getScreenHeight(context: Context): Int = context.resources.displayMetrics.heightPixels
+fun Context.getScreenHeight(): Int = resources.displayMetrics.heightPixels
 
 fun View.getDimension(block: (width: Int, height: Int) -> Unit) {
     val w = measuredWidth
@@ -211,8 +212,8 @@ fun PopupWindow.autoLocateShow(anchorView: View) {
     val anchorHeight = anchorView.height
     val anchorWidth = anchorView.width
 
-    val screenHeight = getScreenHeight(anchorView.context)
-    val screenWidth = getScreenWidth(anchorView.context)
+    val screenHeight = anchorView.context.getScreenHeight()
+    val screenWidth = anchorView.context.getScreenWidth()
 
     contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
     val popHeight = contentView.measuredHeight

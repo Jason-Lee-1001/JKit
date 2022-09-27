@@ -159,6 +159,18 @@ fun Activity.pickImage(requestCode: Int) = pickFile(requestCode, "image/*")
 fun Activity.pickVideo(requestCode: Int) = pickFile(requestCode, "video/*")
 
 /**
+ * 跳转系统的应用设置界面
+ */
+fun Context.toAppSettingPage() {
+    val localIntent = Intent().apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        action = "android.settings.APPLICATION_DETAILS_SETTINGS"
+        data = Uri.fromParts("package", packageName, null)
+    }
+    startActivity(localIntent)
+}
+
+/**
  * 是否授予无障碍权限
  */
 fun isAccessibilityServiceEnable(context: Context): Boolean {
